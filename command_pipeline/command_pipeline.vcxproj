@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\pavma\source\repos\coursework\command_pipeline\command_pipeline\header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="header\command.h" />
+    <ClInclude Include="header\generator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\command.cpp" />
+    <ClCompile Include="source\generator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
