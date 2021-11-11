@@ -5,14 +5,18 @@
 
 #include "command.h"
 
+#include <ctime>
+
+using ClockCycles = std::time_t;
+
 class ExecutingCommand
 {
 private:
-	Command * _command;
+	Command _command;
 	ClockCycles _clc;
 
 public:
-	explicit ExecutingCommand(Command * cmd, ClockCycles clc = 1);
+	explicit ExecutingCommand(const Command & cmd, ClockCycles clc = 1);
 	~ExecutingCommand() = default;
 
 	Command::Type type() const;
@@ -22,7 +26,8 @@ public:
 	ClockCycles clock_cycles() const;
 	void decrease_clock_cycles();
 
-	bool is_executed() const;
+	bool executed() const;
+	const Command & command() const;
 
 };
 

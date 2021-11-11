@@ -3,8 +3,6 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
-#include "generator.h"
-
 enum class OperandType {
 	REGISTER,
 	MEMORY,

@@ -1,4 +1,5 @@
 #include "command.h"
+#include "generator.h"
 
 Command::Command() {
 	this->_type = Type::FIRST;
@@ -8,10 +9,9 @@ Command::Command() {
 
 Command Command::generate_command() {
 	Command cmd;	
-	Generator gen;
-	cmd._type = gen.generate_command_type();
-	cmd._left_operand_type = gen.generate_operand_type();
-	cmd._right_operand_type = gen.generate_operand_type();
+	cmd._type = Generator::generate_command_type();
+	cmd._left_operand_type = Generator::generate_operand_type();
+	cmd._right_operand_type = Generator::generate_operand_type();
 	return cmd;
 }
 

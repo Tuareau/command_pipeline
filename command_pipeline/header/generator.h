@@ -4,6 +4,7 @@
 #define _GENERATOR_H_
 
 #include "command.h"
+#include "pipeline.h"
 
 #include <random>
 #include <ctime>
@@ -14,17 +15,17 @@ using ClockCycles = std::time_t;
 class Generator
 {
 private:
-	double generate_register_adressing_probability() const;
-	double generate_first_command_type_probability() const;
+	static double generate_register_adressing_probability();
+	static double generate_first_command_type_probability();
+
+	static ClockCycles generate_memory_access_clc(const OperandType op_type);
+	static ClockCycles generate_execution_clc(const Command::Type cmd_type);
 
 public:
-	Generator();
+	static Command::Type generate_command_type();
+	static OperandType generate_operand_type();
 
-	Command::Type generate_command_type() const;
-	OperandType generate_operand_type() const;
-
-	ClockCycles generate_second_type_command_clc() const;
-	ClockCycles generate_memory_access_clc() const;
+	static ClockCycles generate_clc(const Command & cmd, Pipeline::Stage stage);
 
 };
 

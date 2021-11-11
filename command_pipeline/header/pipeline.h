@@ -3,11 +3,11 @@
 #ifndef _PIPELINE_H_
 #define _PIPELINE_H_
 
-#include <array>
+#include <map>
 #include <vector>
+#include <stdexcept>
 
 #include "command.h"
-#include "generator.h"
 
 class StatisticsCollector;
 class ExecutingCommand;
@@ -23,13 +23,18 @@ public:
 		WRITE_BACK,
 	};
 	const static size_t STAGES_COUNT = 5;
-	size_t stage_to_index(const Stage stage) const;
+	size_t stage_to_key(const Stage stage) const;
+	Stage key_to_stage(size_t key) const;
 
 private:
-	StatisticsCollector _stats_collector;
+	//StatisticsCollector _stats_collector;
 
-	std::array<ExecutingCommand *, STAGES_COUNT> _executing_commands;
-	std::vector<Command> _commands_vector;
+	std::map<size_t, ExecutingCommand> executing_commands;
+	std::vector<Command> commands_vector;
+
+	void run_cycle_clock();
+	void try_insert_command();
+	void try_shift_command(size_t key);
 
 public:
 	explicit Pipeline(size_t commands_count);

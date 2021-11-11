@@ -1,22 +1,22 @@
 #include "executing_command.h"
 
-ExecutingCommand::ExecutingCommand(Command * cmd, ClockCycles clc) {
+ExecutingCommand::ExecutingCommand(const Command & cmd, ClockCycles clc) {
 	this->_command = cmd;
 	this->_clc = clc;
 }
 
 Command::Type ExecutingCommand::type() const {
-	return _command->type();
+	return _command.type();
 }
 
 
 OperandType ExecutingCommand::left_operand_type() const {
-	return _command->left_operand_type();
+	return _command.left_operand_type();
 }
 
 
 OperandType ExecutingCommand::right_operand_type() const {
-	return _command->right_operand_type();
+	return _command.right_operand_type();
 }
 
 ClockCycles ExecutingCommand::clock_cycles() const {
@@ -32,6 +32,10 @@ void ExecutingCommand::decrease_clock_cycles() {
 	}
 }
 
-bool ExecutingCommand::is_executed() const {
+bool ExecutingCommand::executed() const {
 	return this->_clc == 0;
+}
+
+const Command & ExecutingCommand::command() const {
+	return this->_command;
 }

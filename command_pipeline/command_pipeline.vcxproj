@@ -149,6 +149,7 @@
     <ClCompile Include="source\command.cpp" />
     <ClCompile Include="source\executing_command.cpp" />
     <ClCompile Include="source\generator.cpp" />
+    <ClCompile Include="source\pipeline.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
