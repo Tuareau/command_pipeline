@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="header\command.h" />
     <ClInclude Include="header\generator.h" />
+    <ClInclude Include="header\pipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp" />

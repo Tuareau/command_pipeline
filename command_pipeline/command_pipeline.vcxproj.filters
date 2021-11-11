@@ -17,6 +17,9 @@
     <ClInclude Include="header\generator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp">
