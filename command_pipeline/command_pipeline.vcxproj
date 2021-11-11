@@ -144,12 +144,15 @@
     <ClInclude Include="header\executing_command.h" />
     <ClInclude Include="header\generator.h" />
     <ClInclude Include="header\pipeline.h" />
+    <ClInclude Include="header\statistics_collector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp" />
     <ClCompile Include="source\executing_command.cpp" />
     <ClCompile Include="source\generator.cpp" />
+    <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\pipeline.cpp" />
+    <ClCompile Include="source\statistics_collector.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

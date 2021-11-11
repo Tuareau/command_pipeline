@@ -8,8 +8,9 @@
 #include <stdexcept>
 
 #include "command.h"
+#include "executing_command.h"
+#include "statistics_collector.h"
 
-class StatisticsCollector;
 class ExecutingCommand;
 
 class Pipeline
@@ -23,11 +24,10 @@ public:
 		WRITE_BACK,
 	};
 	const static size_t STAGES_COUNT = 5;
-	size_t stage_to_key(const Stage stage) const;
-	Stage key_to_stage(size_t key) const;
+
 
 private:
-	//StatisticsCollector _stats_collector;
+	StatisticsCollector stats_collector;
 
 	std::map<size_t, ExecutingCommand> executing_commands;
 	std::vector<Command> commands_vector;
@@ -35,6 +35,9 @@ private:
 	void run_cycle_clock();
 	void try_insert_command();
 	void try_shift_command(size_t key);
+
+	size_t stage_to_key(const Stage stage) const;
+	Stage key_to_stage(size_t key) const;
 
 public:
 	explicit Pipeline(size_t commands_count);

@@ -1,7 +1,10 @@
 #include "generator.h"
 
+void Generator::seed() {
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+}
+
 double Generator::generate_register_adressing_probability() {
-	std::srand(std::time(nullptr));
 	double probability = 0.0;
 	const int P = rand() % 3 + 1;
 	switch (P) {
@@ -22,7 +25,6 @@ double Generator::generate_register_adressing_probability() {
 }
 
 double Generator::generate_first_command_type_probability() {
-	std::srand(std::time(nullptr));
 	double probability = 0.0;
 	const int P = rand() % 3 + 1;
 	switch (P) {

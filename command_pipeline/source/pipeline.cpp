@@ -1,5 +1,4 @@
 #include "pipeline.h"
-#include "executing_command.h"
 #include "generator.h"
 
 Pipeline::Pipeline(size_t commands_count) {
@@ -60,6 +59,8 @@ Pipeline::Stage Pipeline::key_to_stage(size_t key) const {
 }
 
 void Pipeline::run() {
+	Generator::seed();
+	this->stats_collector.print_commands(this->commands_vector);
 	while (this->commands_vector.empty() != true) {
 		this->run_cycle_clock();
 	}
@@ -69,7 +70,7 @@ void Pipeline::run() {
 void Pipeline::run_cycle_clock() {
 	this->try_insert_command();
 	// executing instructions and shifting if executed
-	for (size_t stage_key = STAGES_COUNT - 1; stage_key >= 0; --stage_key) {
+	for (int stage_key = STAGES_COUNT - 1; stage_key >= 0; --stage_key) {
 		this->executing_commands[stage_key].decrease_clock_cycles();
 		if (this->executing_commands[stage_key].executed()) {
 			this->try_shift_command(stage_key);

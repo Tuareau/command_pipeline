@@ -1,5 +1,10 @@
 #include "executing_command.h"
 
+ExecutingCommand::ExecutingCommand() {
+	this->_command = Command();
+	this->_clc = 0;
+}
+
 ExecutingCommand::ExecutingCommand(const Command & cmd, ClockCycles clc) {
 	this->_command = cmd;
 	this->_clc = clc;

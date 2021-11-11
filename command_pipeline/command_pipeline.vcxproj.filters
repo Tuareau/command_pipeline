@@ -23,6 +23,9 @@
     <ClInclude Include="header\executing_command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\statistics_collector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp">
@@ -35,6 +38,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\statistics_collector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

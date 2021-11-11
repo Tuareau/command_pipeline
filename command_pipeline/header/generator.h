@@ -27,6 +27,8 @@ public:
 
 	static ClockCycles generate_clc(const Command & cmd, Pipeline::Stage stage);
 
+	static void seed();
+
 };
 
 #endif

@@ -16,6 +16,7 @@ private:
 	ClockCycles _clc;
 
 public:
+	ExecutingCommand();
 	explicit ExecutingCommand(const Command & cmd, ClockCycles clc = 1);
 	~ExecutingCommand() = default;
 
