@@ -141,11 +141,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="header\command.h" />
+    <ClInclude Include="header\executing_command.h" />
     <ClInclude Include="header\generator.h" />
     <ClInclude Include="header\pipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp" />
+    <ClCompile Include="source\executing_command.cpp" />
     <ClCompile Include="source\generator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

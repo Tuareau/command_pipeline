@@ -10,6 +10,7 @@
 #include "generator.h"
 
 class StatisticsCollector;
+class ExecutingCommand;
 
 class Pipeline
 {
@@ -27,7 +28,7 @@ public:
 private:
 	StatisticsCollector _stats_collector;
 
-	std::array<Command *, STAGES_COUNT> _executing_commands;
+	std::array<ExecutingCommand *, STAGES_COUNT> _executing_commands;
 	std::vector<Command> _commands_vector;
 
 public:
