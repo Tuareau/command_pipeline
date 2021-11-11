@@ -3,10 +3,7 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
-#include <ctime>
-#include <random>
-
-using ClockCycles = time_t;
+#include "generator.h"
 
 enum class OperandType {
 	REGISTER,
@@ -22,19 +19,22 @@ public:
 	};
 
 private:
-	Type type;
-	OperandType left_operand_type;
-	OperandType right_operand_type;
-	ClockCycles clock_cycles;
+	Type _type;
+	OperandType _left_operand_type;
+	OperandType _right_operand_type;
 
 public:
 	Command();
 	Command(const Command & other) = default;
 	~Command() = default;
 
+	Command & operator=(const Command & other) = default;
+
 	Type type() const;
 	OperandType left_operand_type() const;
 	OperandType right_operand_type() const;
+
+	static Command generate_command();
 
 };
 
