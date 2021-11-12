@@ -1,14 +1,16 @@
 #include "pipeline.h"
 #include "generator.h"
+#include "statistics_collector.h"
 
 Pipeline::Pipeline(size_t commands_count) {
+	this->stats_collector = new StatisticsCollector(commands_count);
 	for (size_t i = 0; i < commands_count; ++i) {
 		auto cmd = Command::generate_command();
 		this->commands_vector.push_back(cmd);
 	}
 }
 
-size_t Pipeline::stage_to_key(const Stage stage) const {
+size_t Pipeline::stage_to_key(const Stage stage) {
 	size_t idx = 0;
 	switch (stage) {
 	case Stage::DECODE:
@@ -33,7 +35,7 @@ size_t Pipeline::stage_to_key(const Stage stage) const {
 	return idx;
 }
 
-Pipeline::Stage Pipeline::key_to_stage(size_t key) const {
+Pipeline::Stage Pipeline::key_to_stage(size_t key) {
 	Stage stage = Stage::DECODE;
 	switch (key) {
 	case 0:
@@ -59,23 +61,25 @@ Pipeline::Stage Pipeline::key_to_stage(size_t key) const {
 }
 
 void Pipeline::run() {
-	Generator::seed();
-	this->stats_collector.print_commands(this->commands_vector);
 
-	int clc = 0;
+	Generator::seed();
+	this->stats_collector->print_commands(this->commands_vector);
+
 	while (this->commands_vector.empty() != true ||
 		this->executing_commands.empty() != true) 
 	{
 		this->run_cycle_clock();
-		clc++;
+		//this->stats_collector->increase_clock_cycles();
+		//this->stats_collector->print_clc_state(this->executing_commands);
 	}
-	std::cout << "\n" << clc;
 
-	//this->_stats_collector->show();
+	this->stats_collector->print_statistics();
 }
 
 void Pipeline::run_cycle_clock() {
 	this->try_insert_command();
+	this->stats_collector->increase_clock_cycles();
+	this->stats_collector->print_clc_state(this->executing_commands);
 	// executing instructions and shifting if executed
 	for (int stage_key = STAGES_COUNT - 1; stage_key >= 0; --stage_key) {
 		if (this->executing_commands.contains(stage_key)) {
@@ -103,6 +107,7 @@ void Pipeline::try_insert_command() {
 		const auto & next_command = this->commands_vector.back();
 		this->executing_commands[decode_stage_key] = ExecutingCommand(next_command);
 		this->commands_vector.pop_back();
+		this->stats_collector->add_total_clock_cycles(1);
 	}
 }
 
@@ -132,5 +137,6 @@ void Pipeline::try_shift_command(size_t key) {
 	{
 		this->executing_commands[next_stage_key] = ExecutingCommand(this->executing_commands[key].command(), clc);
 		this->executing_commands.erase(key);
+		this->stats_collector->add_total_clock_cycles(clc);
 	}	
 }
