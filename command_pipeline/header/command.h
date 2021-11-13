@@ -3,6 +3,9 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
+#include <string>
+#include <sstream>
+
 enum class OperandType {
 	REGISTER,
 	MEMORY,
@@ -15,8 +18,10 @@ public:
 		FIRST,
 		SECOND,
 	};
+	static size_t commands_count;
 
 private:
+	std::string _name;
 	Type _type;
 	OperandType _left_operand_type;
 	OperandType _right_operand_type;
@@ -28,6 +33,7 @@ public:
 
 	Command & operator=(const Command & other) = default;
 
+	const std::string & name() const;
 	Type type() const;
 	OperandType left_operand_type() const;
 	OperandType right_operand_type() const;

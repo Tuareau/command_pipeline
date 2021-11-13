@@ -64,6 +64,7 @@ void Pipeline::run() {
 
 	Generator::seed();
 	this->stats_collector->print_commands(this->commands_vector);
+	std::reverse(this->commands_vector.begin(), this->commands_vector.end());
 
 	while (this->commands_vector.empty() != true ||
 		this->executing_commands.empty() != true) 

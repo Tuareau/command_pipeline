@@ -57,62 +57,73 @@ void StatisticsCollector::print_stage(Pipeline::Stage stage) const {
 }
 
 void StatisticsCollector::print_commands(const std::vector<Command> & commands) const {
-	const auto indent_form = std::setw(20);
-	const auto indent_data = std::setw(10);
-	std::cout << "\n" << indent_form << "COMMANDS:\n";
-	auto cnt = 0;
+	const auto cmd_form = std::setw(7);
+	const auto cmd_type_form = std::setw(13);
+	const auto cmd_operand_form = std::setw(20);
+
+	const auto indent_title = std::setw(20);
+	std::cout << "\n" << indent_title << "COMMANDS:\n";
+
+	std::cout << "\n" << cmd_form << "CMD#";
+	std::cout << cmd_type_form << "CMD TYPE";
+	std::cout << cmd_operand_form << "CMD LEFT OPRD";
+	std::cout << cmd_operand_form << "CMD RIGHT OPRD" << std::endl;
+
 	for (const auto & cmd : commands) {
-		std::cout << "\n" << indent_form << "C#" << ++cnt;
-		std::cout << "\n" << indent_form << "Type: ";
-		std::cout << indent_data; print_command_type(cmd);
-		std::cout << "\n" << indent_form << "Left operand: ";
-		std::cout << indent_data; print_operand_type(cmd.left_operand_type());
-		std::cout << "\n" << indent_form << "Right operand: ";
-		std::cout << indent_data; print_operand_type(cmd.right_operand_type());
+		std::cout << cmd_form << cmd.name();
+		std::cout << cmd_type_form; print_command_type(cmd);
+		std::cout << cmd_operand_form; print_operand_type(cmd.left_operand_type());
+		std::cout << cmd_operand_form; print_operand_type(cmd.right_operand_type());
 		std::cout << std::endl;
 	}
 }
 
 void StatisticsCollector::print_statistics() const {
-	const auto indent_form = std::setw(40);
-	const auto indent_data = std::setw(10);
-	std::cout << "\n" << indent_form << "RESULT:\n";
 
-	std::cout << "\n" << indent_form << "Command count: ";
-	std::cout << indent_data << this->commands_count;
+	const auto table_form = std::setw(15);
 
-	std::cout << "\n" << indent_form << "CLC count: ";
-	std::cout << indent_data << this->clc;
+	const auto title_form = std::setw(20);
+	std::cout << "\n" << title_form << "RESULT:\n";
 
-	std::cout << "\n" << indent_form << "Average CLC for command executing: ";
+	std::cout << "\n" << table_form << "CMD COUNT";
+	std::cout << table_form << "CLC COUNT";
+	std::cout << table_form << "AVERAGE CLC";
+	std::cout << table_form << "TOTAL CLC";
+	std::cout << table_form << "SAVED TIME" << std::endl;
+
+	std::cout << table_form << this->commands_count;
+	std::cout << table_form << this->clc;
 	auto clc_per_command = static_cast<int>(std::round(this->clc / this->commands_count));
-	std::cout << indent_data << clc_per_command;
-
-	std::cout << "\n" << indent_form << "Total CLC without using pipeline: ";
-	std::cout << indent_data << this->total_clc;
-
-	std::cout << "\n" << indent_form << "Saved time percentage: ";
+	std::cout << table_form << clc_per_command;
+	std::cout << table_form << this->total_clc;
 	auto saved_time_percentage = 100 - static_cast<int>(std::round(((this->clc * 1.0) / this->total_clc * 100)));
-	std::cout << indent_data << saved_time_percentage << "%";
-
+	std::cout << table_form << (std::stringstream() << saved_time_percentage << "%").str();
 	std::cout << std::endl;
 }
 
 void StatisticsCollector::print_clc_state(const std::map<size_t, ExecutingCommand> & executing_commands) const {
-	const auto indent_form = std::setw(10);
-	const auto indent_data = std::setw(20);
-	const auto indent_clc = std::setw(4);
-	std::cout << "\n" << indent_form << "\nPIPELINE CYCLE #" << this->clc;
+	const auto cmd_form = std::setw(7);
+	const auto stage_form = std::setw(20);
+	const auto clc_form = std::setw(5);
+
+	const auto indent_title = std::setw(20);
+	std::cout << "\n" << indent_title << "\nPIPELINE CYCLE #" << this->clc;
+
+	std::cout << "\n\n" << stage_form << "STAGE";
+	std::cout << cmd_form << "CMD#";
+	std::cout << clc_form << "CLC" << std::endl;
+
 	for (size_t stage_key = 0; stage_key < Pipeline::STAGES_COUNT; ++stage_key) {
-		std::cout << "\n" << indent_form << "Stage: ";
-		std::cout << indent_data; print_stage(Pipeline::key_to_stage(stage_key));
-		std::cout << indent_form << "CLC: ";
-		if (executing_commands.contains(stage_key)) {			
-			std::cout << indent_clc << executing_commands.find(stage_key)->second.clock_cycles();
+		std::cout << stage_form; print_stage(Pipeline::key_to_stage(stage_key));
+		if (executing_commands.contains(stage_key)) {		
+			std::cout << cmd_form << executing_commands.find(stage_key)->second.command().name();
+			std::cout << clc_form << executing_commands.find(stage_key)->second.clock_cycles();
 		}
 		else {
-			std::cout << indent_clc << "#";
-		}		
+			std::cout << cmd_form << "-";
+			std::cout << clc_form << "-";
+		}
+		std::cout << std::endl;	
 	}
-	std::cout << std::endl;
+
 }
