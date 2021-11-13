@@ -125,17 +125,15 @@ void Pipeline::try_shift_command(size_t key) {
 	}
 	
 	auto next_stage_key = key + 1;
-	// generate new clc for next stage
-	auto clc {
-		Generator::generate_clc(this->executing_commands[key].command(), this->key_to_stage(next_stage_key))
-	};
-		
 	auto contains_next_command = this->executing_commands.contains(next_stage_key);
 
-	// shift to next stage
-	if (!contains_next_command ||
-		this->executing_commands[next_stage_key].executed()) 
-	{
+	if (!contains_next_command) {
+		// generate new clc for next stage
+		auto clc {
+			Generator::generate_clc(this->executing_commands[key].command(), this->key_to_stage(next_stage_key))
+		};	
+
+		// shift to next stage
 		this->executing_commands[next_stage_key] = ExecutingCommand(this->executing_commands[key].command(), clc);
 		this->executing_commands.erase(key);
 		this->stats_collector->add_total_clock_cycles(clc);
