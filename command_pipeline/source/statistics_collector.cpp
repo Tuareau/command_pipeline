@@ -93,10 +93,16 @@ void StatisticsCollector::print_statistics() const {
 
 	std::cout << table_form << this->commands_count;
 	std::cout << table_form << this->clc;
-	auto clc_per_command = static_cast<int>(std::round(this->clc / this->commands_count));
+	int clc_per_command = 0;
+	if (this->commands_count != 0) {
+		clc_per_command = static_cast<int>(std::round(this->clc / this->commands_count));
+	}
 	std::cout << table_form << clc_per_command;
 	std::cout << table_form << this->total_clc;
-	auto saved_time_percentage = 100 - static_cast<int>(std::round(((this->clc * 1.0) / this->total_clc * 100)));
+	int saved_time_percentage = 0;
+	if (this->total_clc != 0) {
+		saved_time_percentage = 100 - static_cast<int>(std::round(((this->clc * 1.0) / this->total_clc * 100)));
+	}
 	std::cout << table_form << (std::stringstream() << saved_time_percentage << "%").str();
 	std::cout << std::endl;
 }
