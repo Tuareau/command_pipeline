@@ -41,6 +41,10 @@ bool ExecutingCommand::executed() const {
 	return this->_clc == 0;
 }
 
+Command & ExecutingCommand::command() {
+	return this->_command;
+}
+
 const Command & ExecutingCommand::command() const {
 	return this->_command;
 }

@@ -26,6 +26,9 @@
     <ClInclude Include="header\statistics_collector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\iinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\command.cpp">

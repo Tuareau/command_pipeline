@@ -62,7 +62,6 @@ Pipeline::Stage Pipeline::key_to_stage(size_t key) {
 
 void Pipeline::run() {
 
-	Generator::seed();
 	this->stats_collector->print_commands(this->commands_vector);
 	std::reverse(this->commands_vector.begin(), this->commands_vector.end());
 
@@ -81,15 +80,166 @@ void Pipeline::run_cycle_clock() {
 	this->try_insert_command();
 	this->stats_collector->increase_clock_cycles();
 	this->stats_collector->print_clc_state(this->executing_commands);
+
 	// executing instructions and shifting if executed
+	auto executed = this->try_execute_reg_and_decode();
+	if (!executed) {
+		executed = try_execute_reg_and_count();
+	}
+	if (!executed) {
+		for (auto & cmd : this->executing_commands) {
+			cmd.second.decrease_clock_cycles();
+		}
+	}
 	for (int stage_key = STAGES_COUNT - 1; stage_key >= 0; --stage_key) {
 		if (this->executing_commands.contains(stage_key)) {
-			this->executing_commands[stage_key].decrease_clock_cycles();
 			if (this->executing_commands[stage_key].executed()) {
 				this->try_shift_command(stage_key);
 			}
 		}
 	}
+}
+
+bool Pipeline::try_execute_reg_and_decode() {
+	// collect reg & decode instructions
+	std::vector<ExecutingCommand *> cmds_to_execute;
+	auto decode_instr_found = false;
+	auto reg_instr_found = false;
+	for (auto & exec_cmd : this->executing_commands) {
+		auto & [stage_key, cmd] = exec_cmd;
+		auto stage = this->key_to_stage(stage_key);
+		switch (stage) {
+		case Pipeline::Stage::DECODE:
+		{
+			if (!cmd.executed()) {
+				auto cmd_ptr = &cmd;
+				cmds_to_execute.push_back(cmd_ptr);
+				decode_instr_found = true;
+			}
+			break;
+		}
+		case Pipeline::Stage::FETCH_LEFT_OPERAND:
+		{
+			if (!cmd.executed()) {
+				if (cmd.left_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		case Pipeline::Stage::FETCH_RIGHT_OPERAND:
+		{
+			if (!cmd.executed()) {
+				if (cmd.right_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		case Pipeline::Stage::EXECUTE:
+		{
+			break;
+		}
+		case Pipeline::Stage::WRITE_BACK:
+		{
+			if (!cmd.executed()) {
+				if (cmd.right_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		default:
+			throw std::logic_error("Pipeline::try_execute_reg_and_decode(): stage type mismatch");
+			break;
+		}
+	}
+	
+	// executing 
+	auto instr_found = reg_instr_found && decode_instr_found;
+	if (instr_found) {
+		for (auto & cmd : cmds_to_execute) {
+			cmd->decrease_clock_cycles();
+		}
+	}
+	return instr_found;
+}
+
+bool Pipeline::try_execute_reg_and_count() {
+	// collect reg & count instructions
+	std::vector<ExecutingCommand *> cmds_to_execute;
+	auto count_instr_found = false;
+	auto reg_instr_found = false;
+	for (auto & exec_cmd : this->executing_commands) {
+		auto & [stage_key, cmd] = exec_cmd;
+		auto stage = this->key_to_stage(stage_key);
+		switch (stage) {
+		case Pipeline::Stage::DECODE:
+		{
+			break;
+		}
+		case Pipeline::Stage::FETCH_LEFT_OPERAND:
+		{
+			if (!cmd.executed()) {
+				if (cmd.left_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		case Pipeline::Stage::FETCH_RIGHT_OPERAND:
+		{
+			if (!cmd.executed()) {
+				if (cmd.right_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		case Pipeline::Stage::EXECUTE:
+		{
+			if (!cmd.executed()) {
+				auto cmd_ptr = &cmd;
+				cmds_to_execute.push_back(cmd_ptr);
+				count_instr_found = true;
+			}
+			break;
+		}
+		case Pipeline::Stage::WRITE_BACK:
+		{
+			if (!cmd.executed()) {
+				if (cmd.right_operand_type() == OperandType::REGISTER) {
+					auto cmd_ptr = &cmd;
+					cmds_to_execute.push_back(cmd_ptr);
+					reg_instr_found = true;
+				}
+			}
+			break;
+		}
+		default:
+			throw std::logic_error("Pipeline::try_execute_reg_and_decode(): stage type mismatch");
+			break;
+		}
+	}
+
+	// executing 
+	auto instr_found = reg_instr_found && count_instr_found;
+	if (instr_found) {
+		for (auto & cmd : cmds_to_execute) {
+			cmd->decrease_clock_cycles();
+		}
+	}
+	return instr_found;
 }
 
 void Pipeline::try_insert_command() {

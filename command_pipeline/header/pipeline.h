@@ -36,6 +36,9 @@ private:
 	void try_insert_command();
 	void try_shift_command(size_t key);
 
+	bool try_execute_reg_and_decode();
+	bool try_execute_reg_and_count();
+
 public:
 	explicit Pipeline(size_t commands_count);
 	~Pipeline() = default;

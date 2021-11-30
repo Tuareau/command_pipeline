@@ -1,12 +1,10 @@
 #include "generator.h"
 
-void Generator::seed() {
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
-}
-
 double Generator::generate_register_adressing_probability() {
+	std::random_device rand_dev;
+	std::mt19937 mt(rand_dev());
 	double probability = 0.0;
-	const int P = rand() % 3 + 1;
+	const int P = mt() % 3 + 1;
 	switch (P) {
 	case 1:
 		probability = 0.9;
@@ -25,8 +23,10 @@ double Generator::generate_register_adressing_probability() {
 }
 
 double Generator::generate_first_command_type_probability() {
+	std::random_device rand_dev;
+	std::mt19937 mt(rand_dev());
 	double probability = 0.0;
-	const int P = rand() % 3 + 1;
+	const int P = mt() % 3 + 1;
 	switch (P) {
 	case 1:
 		probability = 0.9;
@@ -45,10 +45,12 @@ double Generator::generate_first_command_type_probability() {
 }
 
 Command::Type Generator::generate_command_type() {
+	std::random_device rand_dev;
+	std::mt19937 mt(rand_dev());
 	double fst_cmd_prob = generate_first_command_type_probability();
 	int fst_cmd_prob_per_cent = static_cast<int>(fst_cmd_prob * 100);
 
-	int probability = rand() % 100 + 1;
+	int probability = mt() % 100 + 1;
 	if (probability >= 100 - fst_cmd_prob_per_cent) {
 		return Command::Type::FIRST;
 	}
@@ -58,10 +60,12 @@ Command::Type Generator::generate_command_type() {
 }
 
 OperandType Generator::generate_operand_type() {
+	std::random_device rand_dev;
+	std::mt19937 mt(rand_dev());
 	double register_prob = generate_register_adressing_probability();
 	int register_prob_per_cent = static_cast<int>(register_prob * 100);
 
-	int probability = rand() % 100 + 1;
+	int probability = mt() % 100 + 1;
 	if (probability >= 100 - register_prob_per_cent) {
 		return OperandType::REGISTER;
 	}

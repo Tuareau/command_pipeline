@@ -28,6 +28,7 @@ public:
 	void decrease_clock_cycles();
 
 	bool executed() const;
+	Command & command();
 	const Command & command() const;
 
 };

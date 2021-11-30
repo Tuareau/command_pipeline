@@ -144,6 +144,7 @@
     <ClInclude Include="header\command.h" />
     <ClInclude Include="header\executing_command.h" />
     <ClInclude Include="header\generator.h" />
+    <ClInclude Include="header\iinput.h" />
     <ClInclude Include="header\pipeline.h" />
     <ClInclude Include="header\statistics_collector.h" />
   </ItemGroup>
